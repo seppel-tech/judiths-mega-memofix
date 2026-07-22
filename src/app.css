@@ -29,7 +29,8 @@ body {
 .saldo { display: inline-flex; align-items: center; gap: 8px; opacity: 0.85; color: var(--primary); }
 .saldo-num { font-family: var(--font-serif); font-size: 1.2rem; }
 .h2 { font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 8px; }
-.back { position: absolute; left: 16px; top: 16px; background: none; border: none; font-size: 1.4rem; color: var(--primary); cursor: pointer; min-height: var(--tap); }
+.back { position: absolute; left: 16px; top: 16px; background: none; border: none; font-size: 1.4rem; color: var(--primary); cursor: pointer; min-height: var(--tap); min-width: var(--tap); }
+.screen { position: relative; }
 .level-list { list-style: none; margin: 0; padding: 0; width: 100%; display: flex; flex-direction: column; gap: 12px; }
 .level-card { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 16px; cursor: pointer; min-height: 64px; }
 .level-card:active { transform: scale(0.99); }
