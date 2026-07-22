@@ -6,6 +6,10 @@ import { ornaments } from '../art/ornaments.js';
 import { lipIcon } from '../art/lipIcon.js';
 import { MOTIF_SETS } from '../art/motifs/index.js';
 
+function escapeAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 export function accountScreen(container) {
   render();
   function render() {
@@ -41,12 +45,14 @@ export function accountScreen(container) {
         <span class="v-num">Nr. ${v.serial}</span>
         <span class="v-meta">${v.levelName} · ${'★'.repeat(v.stars)}</span>
         ${v.state === 'redeemed' && v.redeemedAt ? `<span class="v-date">${fmt(v.redeemedAt)}</span>` : ''}
+        ${v.state === 'redeemed' && v.note ? `<span class="v-note">${escapeAttr(v.note)}</span>` : ''}
         ${canRedeem ? `<button class="btn redeem" data-redeem="${v.id}">Einlösen</button>` : ''}
       </li>`).join('')}</ul>`;
   }
 
   function confirmRedeem(id) {
     const v = store.getState().vouchers.find(x => x.id === id);
+    if (!v) return;
     const ov = document.createElement('div');
     ov.className = 'modal-overlay';
     ov.innerHTML = `<div class="modal">
@@ -103,7 +109,7 @@ function settingsHtml(s) {
     </div>
     <div class="set-row"><span>Sound</span><div class="toggles">${toggle('cards',s.sound.cards)}${toggle('success',s.sound.success)}${toggle('stamp',s.sound.stamp)}</div></div>
     <div class="set-row"><span>Zeitanzeige</span><label class="switch"><input type="checkbox" data-time ${s.showTime?'checked':''}/><span>anzeigen</span></label></div>
-    <div class="set-row"><span>Name</span><input type="text" data-name value="${s.name}" maxlength="24"/></div>
+    <div class="set-row"><span>Name</span><input type="text" data-name value="${escapeAttr(s.name)}" maxlength="24"/></div>
   `;
 }
 

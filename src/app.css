@@ -98,6 +98,7 @@ html[data-level="4"] .face.front { filter: saturate(0.7) brightness(0.85); }
 .v-num { font-variant-numeric: tabular-nums; font-weight: 500; }
 .v-meta { font-size: 0.8rem; opacity: 0.75; flex: 1; }
 .v-date { font-size: 0.75rem; opacity: 0.6; }
+.v-note { display: block; width: 100%; font-size: 0.75rem; font-style: italic; opacity: 0.6; margin-top: 2px; }
 .redeem { min-height: 36px; padding: 0 16px; }
 .v-row.choice { box-shadow: inset 3px 0 0 #B0B0B0; }
 .v-row.premium, .v-row.milestone { box-shadow: inset 3px 0 0 #C9A05A; }
