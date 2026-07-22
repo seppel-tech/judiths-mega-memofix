@@ -1,13 +1,18 @@
+// Monotonic counter so each guilloché pattern gets a document-unique id,
+// avoiding duplicate-id collisions when several vouchers render together.
+let guilloSeq = 0;
+
 export const ornaments = {
   guilloche() {
+    const id = `guillo-${guilloSeq++}`;
     return `<svg class="guilloche" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
       <defs>
-        <pattern id="guillo" width="10" height="10" patternUnits="userSpaceOnUse">
+        <pattern id="${id}" width="10" height="10" patternUnits="userSpaceOnUse">
           <path d="M0 5 Q2.5 0 5 5 T10 5" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
           <path d="M5 0 Q10 2.5 5 5 T5 10" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
         </pattern>
       </defs>
-      <rect width="100" height="100" fill="url(#guillo)"/>
+      <rect width="100" height="100" fill="url(#${id})"/>
     </svg>`;
   },
   perforation({ w = 100, h = 100 } = {}) {
