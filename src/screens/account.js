@@ -20,11 +20,11 @@ export function accountScreen(container) {
       <main class="screen account">
         <header class="acct-head">
           <button class="back" id="back">←</button>
-          <h2 class="h2">Kuss-Konto</h2>
+          <h2 class="h2">Konto</h2>
         </header>
         <p class="big-saldo">${lipIcon()} ×${open.length}</p>
         <section class="list"><h3 class="list-title">Offen</h3>${voucherList(open, true)}</section>
-        <section class="list"><h3 class="list-title">Eingelöst</h3>${voucherList(redeemed, false)}</section>
+        <section class="list"><h3 class="list-title">Verbraucht</h3>${voucherList(redeemed, false)}</section>
         <section class="settings">
           <h3 class="list-title">Einstellungen</h3>
           ${settingsHtml(s.settings)}
@@ -39,14 +39,14 @@ export function accountScreen(container) {
   }
 
   function voucherList(list, canRedeem) {
-    if (!list.length) return `<p class="empty">Keine Gutscheine.</p>`;
+    if (!list.length) return `<p class="empty">Keine Einträge.</p>`;
     return `<ul class="vouchers">${list.map(v => `
       <li class="v-row ${v.category} ${v.isMilestone ? 'milestone' : ''}">
         <span class="v-num">Nr. ${v.serial}</span>
         <span class="v-meta">${v.levelName} · ${'★'.repeat(v.stars)}</span>
         ${v.state === 'redeemed' && v.redeemedAt ? `<span class="v-date">${fmt(v.redeemedAt)}</span>` : ''}
         ${v.state === 'redeemed' && v.note ? `<span class="v-note">${escapeAttr(v.note)}</span>` : ''}
-        ${canRedeem ? `<button class="btn redeem" data-redeem="${v.id}">Einlösen</button>` : ''}
+        ${canRedeem ? `<button class="btn redeem" data-redeem="${v.id}">Verbrauchen</button>` : ''}
       </li>`).join('')}</ul>`;
   }
 
@@ -56,7 +56,7 @@ export function accountScreen(container) {
     const ov = document.createElement('div');
     ov.className = 'modal-overlay';
     ov.innerHTML = `<div class="modal">
-      <h3>Gutschein Nr. ${v.serial} jetzt einlösen?</h3>
+      <h3>Nr. ${v.serial} verbrauchen?</h3>
       <div class="modal-actions">
         <button class="btn" id="cancel">Abbrechen</button>
         <button class="btn btn-primary" id="ok">Bestätigen</button>
@@ -78,7 +78,7 @@ export function accountScreen(container) {
       <div class="stamp-anim">${ornaments.stamp()}</div>
       <textarea class="note" maxlength="100" placeholder="Notiz (optional)"></textarea>
       <div class="note-count"><span id="nc">0</span>/100</div>
-      <button class="btn btn-primary" id="finalize">Fertig</button>
+      <button class="btn btn-primary" id="finalize">OK</button>
     </div>`;
     container.appendChild(overlay);
     audio.stamp(); haptics.heavy();

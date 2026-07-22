@@ -103,7 +103,7 @@ describe('computeStars', () => {
   });
 });
 
-describe('maybeReshuffle (Va banque)', () => {
+describe('maybeReshuffle (Extrem)', () => {
   it('level 5 starts with 2 reshuffles remaining', () => {
     const g = createGame(5, Array.from({length:18},(_,i)=>`m${i}`));
     expect(g.reshufflesRemaining).toBe(2);
@@ -172,7 +172,7 @@ describe('voucher logic', () => {
     expect(v.serial).toBe(34);
     expect(v.category).toBe('premium');
     expect(v.level).toBe(5);
-    expect(v.levelName).toBe('Va banque');
+    expect(v.levelName).toBe('Extrem');
     expect(v.isMilestone).toBe(false);
     expect(v.state).toBe('open');
     expect(v.redeemedAt).toBeNull();

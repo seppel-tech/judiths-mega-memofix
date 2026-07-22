@@ -34,7 +34,7 @@ export const ornaments = {
     return `<svg viewBox="0 0 120 120" aria-hidden="true">
       <rect x="6" y="6" width="108" height="108" fill="none" stroke="#7A2E3E" stroke-width="3" opacity="0.85"/>
       <rect x="12" y="12" width="96" height="96" fill="none" stroke="#7A2E3E" stroke-width="1.2" opacity="0.7"/>
-      <text x="60" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="18" letter-spacing="3" fill="#7A2E3E" opacity="0.85" transform="rotate(-8 60 60)">EINGELÖST</text>
+      <text x="60" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="18" letter-spacing="3" fill="#7A2E3E" opacity="0.85" transform="rotate(-8 60 60)">VERBRAUCHT</text>
     </svg>`;
   }
 };

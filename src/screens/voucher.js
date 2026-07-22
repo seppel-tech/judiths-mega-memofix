@@ -17,21 +17,21 @@ export function voucherScreen(container, params) {
       <article class="${cls}">
         <div class="guilloche-bg">${ornaments.guilloche()}</div>
         <header class="ticket-top">
-          <span class="brand">Mémoire</span>
-          <span class="serial">Gutschein Nr. ${v.serial}</span>
+          <span class="brand">Judiths Mega Memofix</span>
+          <span class="serial">Nr. ${v.serial}</span>
         </header>
         <div class="ticket-body">
-          <p class="label">Ein Kuss</p>
+          <p class="label">1 Punkt</p>
           <div class="stars">${'★'.repeat(v.stars)}${'☆'.repeat(3 - v.stars)}</div>
-          <p class="meta">Ausgestellt am ${date}</p>
-          <p class="meta">Errungen auf Stufe: ${v.levelName}</p>
+          <p class="meta">Datum: ${date}</p>
+          <p class="meta">Stufe: ${v.levelName}</p>
         </div>
         <div class="perf">${ornaments.perforation({ w: 100, h: 6 })}</div>
         ${v.isMilestone ? `<span class="seal">${ornaments.seal()}</span>` : ''}
       </article>
       <div class="actions">
-        <button class="btn btn-primary" id="again">Noch eine Runde</button>
-        <button class="btn" id="account">Zum Konto</button>
+        <button class="btn btn-primary" id="again">Weiter spielen</button>
+        <button class="btn" id="account">Konto</button>
       </div>
     </main>`;
 

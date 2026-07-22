@@ -1,17 +1,17 @@
 :root {
-  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-serif: 'Inter', system-ui, sans-serif;
   --font-sans: 'Inter', system-ui, sans-serif;
   --tap: 48px;
 }
 html[data-theme="rose"] {
-  --bg: #FAF6F1; --primary: #C9A28A; --accent: #7A2E3E;
-  --ink: #2a2320; --paper: #fffaf3; --line: rgba(122, 46, 62, 0.18);
+  --bg: #FFE600; --primary: #FF00A8; --accent: #00C8FF;
+  --ink: #2A0040; --paper: #FFFFFF; --line: rgba(255, 0, 168, 0.28);
 }
 html[data-theme="nuit"] {
-  --bg: #1A1A24; --primary: #D4B896; --accent: #C98A9A;
-  --ink: #ece6dd; --paper: #23232f; --line: rgba(212, 184, 150, 0.22);
+  --bg: #00E0B0; --primary: #FF0033; --accent: #FFEE00;
+  --ink: #1A0030; --paper: #00FFCC; --line: rgba(255, 0, 51, 0.30);
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; text-transform: uppercase; }
 html, body { margin: 0; padding: 0; }
 body {
   font-family: var(--font-sans);
@@ -27,6 +27,7 @@ body {
 .btn:active { transform: scale(0.98); }
 .btn-primary { background: var(--primary); color: var(--bg); border: none; padding: 0 28px; font-size: 1.05rem; letter-spacing: 0.04em; }
 .saldo { display: inline-flex; align-items: center; gap: 8px; opacity: 0.85; color: var(--primary); }
+.version { margin: 0; font-size: 0.7rem; opacity: 0.5; letter-spacing: 0.04em; }
 .saldo-num { font-family: var(--font-serif); font-size: 1.2rem; }
 .h2 { font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 8px; }
 .back { position: absolute; left: 16px; top: 16px; background: none; border: none; font-size: 1.4rem; color: var(--primary); cursor: pointer; min-height: var(--tap); min-width: var(--tap); }
@@ -47,7 +48,7 @@ body {
 .board-head .lvl-name { font-family: var(--font-serif); font-size: 1.1rem; }
 .board-head .moves, .board-head .time { font-size: 0.85rem; opacity: 0.7; }
 .board-head .pause { margin-left: auto; background: none; border: 1px solid var(--line); border-radius: 4px; min-width: var(--tap); min-height: var(--tap); cursor: pointer; color: var(--ink); }
-.grid { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; align-content: flex-start; }
+.grid { display: grid; gap: 8px; width: 100%; }
 .card { position: relative; aspect-ratio: 3/4; background: transparent; border: none; padding: 0; cursor: pointer; perspective: 600px; }
 .card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .3s ease-out; color: var(--primary); }
 .card.face-up .card-inner, .card.matched .card-inner { transform: rotateY(180deg); }

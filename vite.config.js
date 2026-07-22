@@ -7,11 +7,11 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icon-192.svg', 'icon-512.svg'],
       manifest: {
-        name: 'Mémoire',
-        short_name: 'Mémoire',
-        description: 'Ein Memory. Eine Währung, die nicht verfällt.',
-        theme_color: '#C9A28A',
-        background_color: '#FAF6F1',
+        name: 'Judiths Mega Memofix',
+        short_name: 'Mega Memofix',
+        description: 'Paare finden, Punkte sammeln.',
+        theme_color: '#FFE600',
+        background_color: '#FFE600',
         display: 'standalone',
         orientation: 'portrait',
         icons: [
