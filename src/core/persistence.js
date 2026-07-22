@@ -19,8 +19,11 @@ function read(name) {
   if (raw === null) return null;
   try { return JSON.parse(raw); }
   catch {
+    // Back up the corrupt payload, then clear the original key so subsequent
+    // loads don't re-detect and re-back-up the same corruption on every read.
     const backup = `${PREFIX}corrupt.${name}.${Date.now()}`;
     try { localStorage.setItem(backup, raw); } catch {}
+    try { localStorage.removeItem(PREFIX + name); } catch {}
     return null;
   }
 }
