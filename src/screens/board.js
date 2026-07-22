@@ -54,18 +54,14 @@ export function boardScreen(container, params) {
       cell.style.order = card.position;
       cell.setAttribute('aria-label', `Karte ${card.position + 1}`);
       cell.innerHTML = `<div class="card-inner">
-        <div class="face back">${cardBackOrnament()}</div>
+        <div class="face back" aria-hidden="true"></div>
         <div class="face front">${motifs[card.motif]}</div>
       </div>`;
       cell.addEventListener('click', () => onFlip(card.id));
       grid.appendChild(cell);
     }
-    container.querySelector('#back').addEventListener('click', () => router.go('levelselect'));
-    container.querySelector('#pause').addEventListener('click', togglePause);
-  }
-
-  function cardBackOrnament() {
-    return `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.5"><path d="M6 24 Q12 12 24 24 T42 24 M6 30 Q12 18 24 30 T42 30 M6 18 Q12 6 24 18 T42 18"/></svg>`;
+    container.querySelector('#back').addEventListener('click', () => { haptics.light(); router.go('levelselect'); });
+    container.querySelector('#pause').addEventListener('click', () => { haptics.light(); togglePause(); });
   }
 
   function onFlip(cardId) {
@@ -82,13 +78,16 @@ export function boardScreen(container, params) {
 
     // flip / match / nomatch / win all change at least one card face.
     audio.flip();
-    haptics.light();
+    // Distinct feel per outcome: a soft tick for a normal flip, a sharper
+    // double-buzz when the second card doesn't match.
+    if (res.event === 'nomatch') haptics.error();
+    else haptics.light();
     rerenderCards();
     updateMovesLabel();
 
     if (res.event === 'match' || res.event === 'win') {
       audio.success();
-      haptics.medium();
+      if (res.event === 'match') haptics.success();
       // maybeReshuffle only triggers for level 5 (reshuffleEvery: 6), at
       // multiples of 6 matched pairs, while a pair count remains. On win it
       // short-circuits inside the engine.
@@ -100,6 +99,7 @@ export function boardScreen(container, params) {
     }
 
     if (res.event === 'win') {
+      haptics.win();
       const stars = computeStars(game.moves, game.level.pairs);
       store.recordStars(levelId, stars);
       const voucher = store.issueNextVoucher({ levelId, stars });

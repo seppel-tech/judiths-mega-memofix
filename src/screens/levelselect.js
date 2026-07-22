@@ -1,6 +1,7 @@
 import { LEVELS } from '../game/levels.js';
 import { store } from '../core/store.js';
 import { router } from '../core/router.js';
+import { haptics } from '../core/haptics.js';
 import { ornaments } from '../art/ornaments.js';
 
 function gridPreview(cols, rows) {
@@ -26,9 +27,9 @@ export function levelSelectScreen(container) {
           </li>`).join('')}
       </ul>
     </main>`;
-  container.querySelector('#back').addEventListener('click', () => router.go('start'));
+  container.querySelector('#back').addEventListener('click', () => { haptics.light(); router.go('start'); });
   container.querySelectorAll('.level-card').forEach(el =>
-    el.addEventListener('click', () => router.go('board', { level: el.dataset.level }))
+    el.addEventListener('click', () => { haptics.medium(); router.go('board', { level: el.dataset.level }); })
   );
   return { unmount() {} };
 }

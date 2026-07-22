@@ -37,7 +37,9 @@ export function voucherScreen(container, params) {
 
   const ticket = container.querySelector('.ticket');
   ticket.classList.add(reduced ? 'reveal-static' : 'reveal');
-  audio.success(); haptics.medium();
+  // This is the payoff: revealing the earned Kusspunkt. Celebrate it with the
+  // full win pattern so the reward moment really lands, not just a plain tick.
+  audio.success(); haptics.win();
 
   container.querySelector('#again').addEventListener('click', () => router.go('board', { level: v.level }));
   container.querySelector('#account').addEventListener('click', () => router.go('account'));

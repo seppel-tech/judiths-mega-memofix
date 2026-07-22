@@ -24,6 +24,7 @@ html[data-theme="nuit"] {
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+html { height: 100%; }
 body {
   font-family: var(--font-sans);
   background: var(--bg);
@@ -35,9 +36,20 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   line-height: 1.5;
+  /* iOS: stop rubber-band scroll bounce and lock the game to one screen */
+  min-height: 100dvh;
+  overscroll-behavior: none;
+  /* Treat it like a native app: no accidental text selection or callout menus
+     when tapping cards, and no double-tap zoom delay. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
 }
+/* Keep text selectable where it actually matters (voucher codes, inputs) */
+input, textarea, .code, .ticket-code { -webkit-user-select: text; user-select: text; }
 #app { max-width: 720px; margin: 0 auto; padding: env(safe-area-inset-top) 22px env(safe-area-inset-bottom); }
-.screen { min-height: 88vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; text-align: center; position: relative; }
+.screen { min-height: 88dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; text-align: center; position: relative; }
 
 /* Small tracked uppercase labels — the "UI chrome" voice */
 .tagline, .version, .meta, .moves, .time, .lvl-name, .saldo,
@@ -134,8 +146,13 @@ body {
   border-radius: var(--r-sm); background: var(--paper);
   box-shadow: var(--shadow-sm);
 }
-.face.back { border: 1px solid var(--line); background: linear-gradient(160deg, var(--paper), color-mix(in srgb, var(--bg) 18%, var(--paper))); }
-.face.back svg { width: 58%; height: 58%; }
+.face.back {
+  border: 2px solid var(--primary);
+  background-image: url('/card-back.jpg');
+  background-size: cover;
+  background-position: center 34%;
+  box-shadow: var(--shadow-sm), inset 0 0 0 3px var(--paper);
+}
 .face.front { transform: rotateY(180deg); color: var(--ink); border: 1px solid var(--line); }
 .face.front svg { width: 66%; height: 66%; }
 .card.matched .face.front { box-shadow: 0 0 0 1.5px var(--primary), var(--shadow-sm); animation: shimmer .55s ease-out; }

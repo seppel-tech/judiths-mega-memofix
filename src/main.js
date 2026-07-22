@@ -1,6 +1,7 @@
 import './app.css';
 import { store } from './core/store.js';
 import { audio } from './core/audio.js';
+import { haptics } from './core/haptics.js';
 import { router } from './core/router.js';
 import { startScreen } from './screens/start.js';
 import { levelSelectScreen } from './screens/levelselect.js';
@@ -18,6 +19,10 @@ function applySettings({ theme, sound }) {
 // screen having to know about the audio module.
 applySettings(store.getState().settings);
 store.subscribe(state => applySettings(state.settings));
+
+// The iOS haptic switch must be created within a user gesture to be reliable.
+// Prime it once on the first pointer interaction, then stop listening.
+window.addEventListener('pointerdown', () => haptics.prime(), { once: true });
 
 router.register({
   start: startScreen,

@@ -1,5 +1,6 @@
 import { store } from '../core/store.js';
 import { router } from '../core/router.js';
+import { haptics } from '../core/haptics.js';
 import { lipIcon } from '../art/lipIcon.js';
 
 export function startScreen(container) {
@@ -11,6 +12,6 @@ export function startScreen(container) {
       <p class="version">Bimmelbirnen Version 1.0</p>
       <p class="saldo">${lipIcon()} <span class="saldo-num">${open}</span></p>
     </main>`;
-  container.querySelector('#play').addEventListener('click', () => router.go('levelselect'));
+  container.querySelector('#play').addEventListener('click', () => { haptics.medium(); router.go('levelselect'); });
   return { unmount() {} };
 }
