@@ -20,3 +20,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 #app { max-width: 720px; margin: 0 auto; padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom); }
+.screen { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; }
+.title { font-family: var(--font-serif); font-size: clamp(2.6rem, 12vw, 4rem); margin: 0; letter-spacing: 0.02em; color: var(--primary); }
+.tagline { margin: 0; opacity: 0.75; font-size: 0.95rem; }
+.btn { font-family: var(--font-sans); min-height: var(--tap); min-width: var(--tap); border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 4px; cursor: pointer; transition: transform .12s ease; }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--primary); color: var(--bg); border: none; padding: 0 28px; font-size: 1.05rem; letter-spacing: 0.04em; }
+.saldo { display: inline-flex; align-items: center; gap: 8px; opacity: 0.85; color: var(--primary); }
+.saldo-num { font-family: var(--font-serif); font-size: 1.2rem; }
