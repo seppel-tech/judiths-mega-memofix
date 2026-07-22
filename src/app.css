@@ -118,3 +118,6 @@ select, input[type=text] { background: var(--paper); color: var(--ink); border: 
 .ticket.mini { position: relative; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 14px; margin-bottom: 12px; }
 .stamp-anim { position: absolute; top: 30%; left: 50%; width: 140px; transform: translate(-50%,-50%) scale(2.4) rotate(-8deg); animation: stampDown .35s ease-out both; pointer-events: none; }
 @keyframes stampDown { 0% { transform: translate(-50%,-120%) scale(3) rotate(-12deg); opacity: 0; } 60% { opacity: 1; } 100% { transform: translate(-50%,-50%) scale(2.4) rotate(-8deg); opacity: 1; } }
+.note { width: 100%; min-height: 60px; resize: vertical; }
+.note-count { font-size: 0.7rem; opacity: 0.6; text-align: right; }
+@media (prefers-reduced-motion: reduce) { .stamp-anim { animation: none; transform: translate(-50%,-50%) scale(2.4) rotate(-8deg); } }
