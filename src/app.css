@@ -1,0 +1,22 @@
+:root {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --tap: 48px;
+}
+html[data-theme="rose"] {
+  --bg: #FAF6F1; --primary: #C9A28A; --accent: #7A2E3E;
+  --ink: #2a2320; --paper: #fffaf3; --line: rgba(122, 46, 62, 0.18);
+}
+html[data-theme="nuit"] {
+  --bg: #1A1A24; --primary: #D4B896; --accent: #C98A9A;
+  --ink: #ece6dd; --paper: #23232f; --line: rgba(212, 184, 150, 0.22);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+}
+#app { max-width: 720px; margin: 0 auto; padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom); }
