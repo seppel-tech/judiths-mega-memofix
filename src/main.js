@@ -8,12 +8,16 @@ import { boardScreen } from './screens/board.js';
 import { voucherScreen } from './screens/voucher.js';
 import { accountScreen } from './screens/account.js';
 
-function applyTheme(theme) { document.documentElement.setAttribute('data-theme', theme); }
-function applyAudio(snd) { audio.setEnabled(snd); }
+function applySettings({ theme, sound }) {
+  document.documentElement.setAttribute('data-theme', theme);
+  audio.setEnabled(sound);
+}
 
-const { settings } = store.getState();
-applyTheme(settings.theme);
-applyAudio(settings.sound);
+// Apply on boot, then re-apply whenever settings change (e.g. toggling a sound
+// or theme in the account screen). Keeps audio/theme in sync without each
+// screen having to know about the audio module.
+applySettings(store.getState().settings);
+store.subscribe(state => applySettings(state.settings));
 
 router.register({
   start: startScreen,
