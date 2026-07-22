@@ -94,3 +94,28 @@ export function maybeReshuffle(game) {
   const cards = game.cards.map(c => posBy.has(c.id) ? { ...c, position: posBy.get(c.id) } : c);
   return { game: { ...game, cards, reshufflesRemaining: game.reshufflesRemaining - 1 }, reshuffled: true };
 }
+
+const MILESTONES = new Set([10, 25, 50, 100]);
+
+export function isMilestone(serial) { return MILESTONES.has(serial); }
+
+export function categoryFor(stars) {
+  return stars === 3 ? 'premium' : stars === 2 ? 'choice' : 'standard';
+}
+
+export function issueVoucher({ serial, levelId, stars }) {
+  const level = getLevel(levelId);
+  return {
+    id: `v_${Date.now()}_${serial}`,
+    serial,
+    issuedAt: new Date().toISOString(),
+    level: level.id,
+    levelName: level.name,
+    stars,
+    category: categoryFor(stars),
+    isMilestone: isMilestone(serial),
+    state: 'open',
+    redeemedAt: null,
+    note: null
+  };
+}

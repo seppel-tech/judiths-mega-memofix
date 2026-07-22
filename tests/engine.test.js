@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createGame, flipCard, resolveNoMatch, computeStars, maybeReshuffle } from '../src/game/engine.js';
+import { createGame, flipCard, resolveNoMatch, computeStars, maybeReshuffle, isMilestone, categoryFor, issueVoucher } from '../src/game/engine.js';
 
 const motifs = Array.from({ length: 18 }, (_, i) => `m${i}`);
 
@@ -150,6 +150,35 @@ describe('maybeReshuffle (Va banque)', () => {
     const g = createGame(5, Array.from({length:18},(_,i)=>`m${i}`));
     g.matchedPairs = 18; g.status = 'won';
     expect(maybeReshuffle(g).reshuffled).toBe(false);
+  });
+});
+
+describe('voucher logic', () => {
+  it('milestones at 10,25,50,100', () => {
+    expect(isMilestone(10)).toBe(true);
+    expect(isMilestone(25)).toBe(true);
+    expect(isMilestone(50)).toBe(true);
+    expect(isMilestone(100)).toBe(true);
+    expect(isMilestone(34)).toBe(false);
+    expect(isMilestone(9)).toBe(false);
+  });
+  it('category maps stars', () => {
+    expect(categoryFor(3)).toBe('premium');
+    expect(categoryFor(2)).toBe('choice');
+    expect(categoryFor(1)).toBe('standard');
+  });
+  it('issueVoucher produces full voucher', () => {
+    const v = issueVoucher({ serial: 34, levelId: 5, stars: 3, moves: 42, pairs: 18 });
+    expect(v.serial).toBe(34);
+    expect(v.category).toBe('premium');
+    expect(v.level).toBe(5);
+    expect(v.levelName).toBe('Va banque');
+    expect(v.isMilestone).toBe(false);
+    expect(v.state).toBe('open');
+    expect(v.redeemedAt).toBeNull();
+    expect(v.note).toBeNull();
+    expect(typeof v.issuedAt).toBe('string');
+    expect(v.id).toMatch(/^v_/);
   });
 });
 
