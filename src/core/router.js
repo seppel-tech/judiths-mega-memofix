@@ -22,8 +22,13 @@ export const router = {
   start() {
     container = document.getElementById('app');
     window.addEventListener('hashchange', render);
-    if (!location.hash) location.hash = '#/start';
-    render();
+    if (!location.hash) {
+      // Setting the hash fires an async hashchange that will call render().
+      // Do NOT also render synchronously here, or the first screen mounts twice.
+      location.hash = '#/start';
+    } else {
+      render();
+    }
   },
   go(name, params = {}) {
     const qs = new URLSearchParams(params).toString();
