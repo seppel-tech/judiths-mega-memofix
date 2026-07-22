@@ -61,6 +61,32 @@ body {
 .pause-card { background: var(--paper); padding: 24px; border-radius: 8px; text-align: center; }
 @media (prefers-reduced-motion: reduce) { .card-inner { transition: none; } .card.matched .face.front { animation: none; } }
 html[data-level="4"] .face.front { filter: saturate(0.7) brightness(0.85); }
+
+/* --- Voucher screen --- */
+.voucher-screen { gap: 24px; }
+.ticket { position: relative; width: min(86vw, 360px); background: var(--paper); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; color: var(--ink); box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
+.guilloche-bg { position: absolute; inset: 0; color: var(--primary); opacity: 0.35; }
+.guilloche-bg svg { width: 100%; height: 100%; }
+.ticket-top { position: relative; display: flex; justify-content: space-between; padding: 14px 16px 6px; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); }
+.brand { font-family: var(--font-serif); font-size: 1rem; }
+.serial { font-variant-numeric: tabular-nums; }
+.ticket-body { position: relative; text-align: center; padding: 14px 16px; }
+.ticket-body .label { font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 8px; }
+.stars { letter-spacing: 0.2em; color: var(--primary); font-size: 1.1rem; }
+.meta { margin: 6px 0 0; font-size: 0.78rem; opacity: 0.75; }
+.perf { color: var(--primary); }
+.perf svg { width: 100%; height: 8px; display: block; }
+.ticket.choice { border-color: #B0B0B0; box-shadow: 0 0 0 1px #B0B0B0, 0 6px 24px rgba(0,0,0,0.12); }
+.ticket.choice .stars { color: #9a9a9a; }
+.ticket.premium, .ticket.milestone { border-color: #C9A05A; box-shadow: 0 0 0 1.5px #C9A05A, 0 6px 24px rgba(0,0,0,0.18); }
+.ticket.premium .stars, .ticket.milestone .stars, .ticket.milestone .serial, .ticket.milestone .brand { color: #C9A05A; }
+.ticket .seal { position: absolute; right: 10px; bottom: 14px; width: 42px; opacity: 0.9; }
+.reveal { animation: ticketPrint .45s ease-out both; }
+.reveal-static { opacity: 1; }
+@keyframes ticketPrint { 0% { opacity: 0; transform: translateY(8px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+.actions { display: flex; flex-direction: column; gap: 10px; width: min(86vw, 360px); }
+@media (prefers-reduced-motion: reduce) { .reveal { animation: none; } }
+
 /* --- Account screen --- */
 .account { gap: 16px; align-items: stretch; }
 .acct-head { display: flex; align-items: center; gap: 12px; position: relative; width: 100%; padding-top: 8px; }
