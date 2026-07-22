@@ -153,10 +153,6 @@ describe('maybeReshuffle (Va banque)', () => {
   });
 });
 
-function positionsOfFaceDown(g) {
-  return g.cards.filter(c => !c.matched && !c.faceUp).map(c => c.position).sort((a,b)=>a-b);
-}
-
 // helpers
 function groupPairs(game) {
   const byMotif = {};
