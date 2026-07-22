@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createGame, flipCard, resolveNoMatch, computeStars } from '../src/game/engine.js';
+import { createGame, flipCard, resolveNoMatch, computeStars, maybeReshuffle } from '../src/game/engine.js';
 
 const motifs = Array.from({ length: 18 }, (_, i) => `m${i}`);
 
@@ -102,6 +102,60 @@ describe('computeStars', () => {
     expect(computeStars(14, 6)).toBe(1);
   });
 });
+
+describe('maybeReshuffle (Va banque)', () => {
+  it('level 5 starts with 2 reshuffles remaining', () => {
+    const g = createGame(5, Array.from({length:18},(_,i)=>`m${i}`));
+    expect(g.reshufflesRemaining).toBe(2);
+  });
+  it('non-5 levels never reshuffle', () => {
+    const g = createGame(3, Array.from({length:18},(_,i)=>`m${i}`));
+    g.matchedPairs = 6;
+    const r = maybeReshuffle(g);
+    expect(r.reshuffled).toBe(false);
+  });
+  it('reshuffles when matchedPairs is multiple of 6 and remaining>0', () => {
+    const g = createGame(5, Array.from({length:18},(_,i)=>`m${i}`));
+    g.matchedPairs = 6;
+    const before = new Map(g.cards.filter(c => !c.matched && !c.faceUp).map(c => [c.id, c.position]));
+    const r = maybeReshuffle(g);
+    expect(r.reshuffled).toBe(true);
+    expect(r.game.reshufflesRemaining).toBe(1);
+    // at least one face-down card's position changed (a real permutation, not identity)
+    const after = new Map(r.game.cards.filter(c => !c.matched && !c.faceUp).map(c => [c.id, c.position]));
+    const changed = [...before.keys()].filter(id => before.get(id) !== after.get(id));
+    // reshuffle is random and *could* be identity (astronomically unlikely with 30 cards),
+    // so assert the count of face-down cards is preserved AND at least one moved.
+    expect(after.size).toBe(before.size);
+    expect(changed.length).toBeGreaterThan(0);
+  });
+  it('does NOT reshuffle at 3, 9', () => {
+    const g = createGame(5, Array.from({length:18},(_,i)=>`m${i}`));
+    for (const mp of [3, 9]) {
+      g.matchedPairs = mp; g.reshufflesRemaining = 2;
+      expect(maybeReshuffle(g).reshuffled).toBe(false);
+    }
+  });
+  it('matched cards keep their positions', () => {
+    const g = createGame(5, Array.from({length:18},(_,i)=>`m${i}`));
+    g.cards[0].matched = g.cards[1].matched = true;
+    g.matchedPairs = 6;
+    const matchedBefore = g.cards.filter(c => c.matched).map(c => [c.id, c.position]);
+    const r = maybeReshuffle(g);
+    const byId = new Map(r.game.cards.map(c => [c.id, c]));
+    // every matched card's position must be unchanged by the reshuffle
+    expect(matchedBefore.every(([id, pos]) => byId.get(id).position === pos)).toBe(true);
+  });
+  it('no reshuffle when game won', () => {
+    const g = createGame(5, Array.from({length:18},(_,i)=>`m${i}`));
+    g.matchedPairs = 18; g.status = 'won';
+    expect(maybeReshuffle(g).reshuffled).toBe(false);
+  });
+});
+
+function positionsOfFaceDown(g) {
+  return g.cards.filter(c => !c.matched && !c.faceUp).map(c => c.position).sort((a,b)=>a-b);
+}
 
 // helpers
 function groupPairs(game) {

@@ -3,6 +3,9 @@ import { getLevel } from './levels.js';
 export function createGame(levelId, motifIds) {
   const level = getLevel(levelId);
   const chosen = motifIds.slice(0, level.pairs);
+  const reshufflesRemaining = level.reshuffleEvery
+    ? Math.floor(level.pairs / level.reshuffleEvery) - 1
+    : 0;
   const cards = [];
   chosen.forEach((motif, pairIndex) => {
     cards.push(mkCard(motif, pairIndex, 0));
@@ -13,7 +16,7 @@ export function createGame(levelId, motifIds) {
   return {
     level, motifSet: null,
     cards, moves: 0, matchedPairs: 0, startedAt: Date.now(), endedAt: null,
-    picks: [], lockInput: false, reshufflesRemaining: 0, status: 'playing'
+    picks: [], lockInput: false, reshufflesRemaining, status: 'playing'
   };
 }
 
@@ -75,4 +78,19 @@ export function computeStars(moves, pairs) {
   if (moves <= pairs * 1.6) return 3;
   if (moves <= pairs * 2.2) return 2;
   return 1;
+}
+
+export function maybeReshuffle(game) {
+  const every = game.level.reshuffleEvery;
+  if (!every) return { game, reshuffled: false };
+  if (game.status === 'won') return { game, reshuffled: false };
+  if (game.reshufflesRemaining <= 0) return { game, reshuffled: false };
+  if (game.matchedPairs === 0 || game.matchedPairs % every !== 0) return { game, reshuffled: false };
+
+  const unmatched = game.cards.filter(c => !c.matched && !c.faceUp);
+  const positions = unmatched.map(c => c.position);
+  shuffleInPlace(positions);
+  const posBy = new Map(unmatched.map((c, i) => [c.id, positions[i]]));
+  const cards = game.cards.map(c => posBy.has(c.id) ? { ...c, position: posBy.get(c.id) } : c);
+  return { game: { ...game, cards, reshufflesRemaining: game.reshufflesRemaining - 1 }, reshuffled: true };
 }
