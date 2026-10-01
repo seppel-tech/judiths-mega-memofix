@@ -1,0 +1,132 @@
+/* FIX-Zugangs-Gate — Login-Seite.
+   Quelle: ~/dev/fix-gate/gate.css (Orchestrator-Entwurf).
+
+   Maßstab ist der Familienstandard der statischen Rechtstexte
+   (~/dev/renovierungs-visualisierer/public/recht.css): Fläche #fafaf7,
+   Tinte #1b1b19, 1-px-Linien #ddddd2, Maigrün #46822a, keine Schatten,
+   keine Radien, Archivo mit system-ui-Fallback.
+
+   Diese Datei liegt als `public/gate.css` in der App und wird vom Gate ÜBER
+   EINE EIGENE DATEI eingebunden, nicht inline: visufix und zaehlerfix setzen
+   `style-src 'self'` — ein <style>-Block würde dort blockiert und die
+   Login-Seite unlesbar machen.
+
+   Farben stammen aus dem CI der jeweiligen App. Weicht eine App ab, werden
+   NUR die vier Variablen unter :root überschrieben, nie die Regeln darunter. */
+
+:root {
+  --flaeche: #fafaf7;
+  --tinte: #1b1b19;
+  --tinte-leise: #64645e;
+  --linie: #ddddd2;
+  --marke: #46822a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body.gate {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--flaeche);
+  color: var(--tinte);
+  font-family: Archivo, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.gate-karte {
+  width: 100%;
+  max-width: 26rem;
+  border: 1px solid var(--linie);
+  padding: 32px;
+  background: #fff;
+}
+
+.gate-titel {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.gate-hinweis {
+  margin: 8px 0 0;
+  color: var(--tinte-leise);
+}
+
+.gate-fehler {
+  margin: 16px 0 0;
+  border-left: 3px solid #a3231b;
+  padding-left: 12px;
+  color: #a3231b;
+}
+
+.gate-form {
+  margin-top: 24px;
+}
+
+.gate-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+  color: var(--tinte-leise);
+}
+
+.gate-feld {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--linie);
+  padding: 12px;
+  background: var(--flaeche);
+  color: var(--tinte);
+  font: inherit;
+}
+
+.gate-feld:focus-visible,
+.gate-knopf:focus-visible {
+  outline: 3px solid var(--marke);
+  outline-offset: 1px;
+}
+
+.gate-knopf {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  border: 1px solid var(--marke);
+  padding: 12px;
+  background: var(--marke);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gate-knopf:hover {
+  background: #3b6f23;
+  border-color: #3b6f23;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --flaeche: #16160f;
+    --tinte: #f2f2ea;
+    --tinte-leise: #a3a399;
+    --linie: #3a3a33;
+  }
+
+  .gate-karte {
+    background: #1e1e16;
+  }
+}
