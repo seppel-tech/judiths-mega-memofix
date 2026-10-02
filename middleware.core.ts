@@ -7,11 +7,12 @@
  * ist sie ohne Vercel-Laufzeit direkt testbar (node:test / vitest).
  *
  * Verhalten in fester Reihenfolge:
- *   1. öffentliche Pfade (Rechtstexte, gate.css, favicon) → durchlassen
- *   2. FIX_GATE_PASSWORD fehlt/leer                            → 503, FAIL-CLOSED
- *   3. POST /__gate/login                                 → Login verarbeiten
- *   4. gültiges Sitzungs-Cookie                           → durchlassen
- *   5. sonst                                              → 401 + Login-Seite
+ *   1. exakter Recovery-Helfer / öffentliche Dateien      → Script / durchlassen
+ *   2. unauthentifizierte Worker-Updates                  → Migrations-Worker
+ *   3. FIX_GATE_PASSWORD fehlt/leer                      → 503, FAIL-CLOSED
+ *   4. POST /__gate/login                                → Login verarbeiten
+ *   5. gültiges Sitzungs-Cookie                          → durchlassen
+ *   6. sonst                                             → 401 + Login-Seite
  *
  * Bewusste Abweichungen vom LIMMOFIX-Vorbild (server/_core/passwordAuth.ts):
  *   - FAIL-CLOSED statt fail-open: LIMMOFIX lässt bei leerem FIX_GATE_PASSWORD alles
@@ -61,6 +62,7 @@ export type GateDeps = {
 };
 
 export const LOGIN_PATH = "/__gate/login";
+const CLIENT_SCRIPT_PATH = "/__gate/client.js";
 export const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 export const SESSION_MAX_AGE_MS = COOKIE_MAX_AGE_SECONDS * 1000;
 /** Toleranz für Uhrendrift zwischen Edge-Instanzen. */
@@ -292,6 +294,7 @@ function page(title: string, body: string, appName: string): string {
     <meta name="referrer" content="same-origin" />
     <title>${escapeHtml(title)} | ${escapeHtml(appName)}</title>
     <link rel="stylesheet" href="/gate.css" />
+    <script src="${CLIENT_SCRIPT_PATH}" defer></script>
   </head>
   <body class="gate">
     <main class="gate-karte">
@@ -467,21 +470,20 @@ export async function gate(
   const url = new URL(request.url);
   const path = url.pathname;
 
+  if (path === CLIENT_SCRIPT_PATH && (request.method === "GET" || request.method === "HEAD")) {
+    // Fragments never travel to the server. Keep recovery tokens in the form
+    // action so the browser inherits them across our fragment-free 303 target.
+    // The response is constant: no password, request URL or application data.
+    return new Response(request.method === "HEAD" ? null : `const form=document.querySelector("form.gate-form");if(form)form.action="${LOGIN_PATH}"+window.location.hash;`, {
+      headers: { "content-type": "application/javascript; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" },
+    });
+  }
+
   if (isPublicPath(path, config)) return null;
 
   const passwords = parseAppPasswords(deps.appPassword);
-  if (passwords.length === 0) return notConfiguredPage(config);
-
-  if (path === LOGIN_PATH) {
-    if (request.method !== "POST") {
-      return loginPage(config, { status: 405, redirectTo: "/" });
-    }
-    return handleLogin(request, config, deps, passwords, url);
-  }
-
-  if (await hasValidSession(request, config, passwords, deps.now)) return null;
-
-  if (config.serviceWorkerPaths?.includes(path) && request.method === "GET") {
+  const authenticated = passwords.length > 0 && await hasValidSession(request, config, passwords, deps.now);
+  if (!authenticated && config.serviceWorkerPaths?.includes(path) && request.method === "GET") {
     // The browser fetches updates outside its existing worker. Install a tiny
     // network-only worker so an old offline shell cannot keep bypassing the
     // online gate. Do not delete any caches, IndexedDB or user project data.
@@ -491,6 +493,17 @@ self.addEventListener("fetch",e=>{if(e.request.mode==="navigate")e.respondWith(f
       headers: { "content-type": "application/javascript; charset=utf-8", "cache-control": "no-store", "service-worker-allowed": "/" },
     });
   }
+  if (passwords.length === 0) return notConfiguredPage(config);
+
+  if (path === LOGIN_PATH) {
+    if (request.method !== "POST") {
+      return loginPage(config, { status: 405, redirectTo: "/" });
+    }
+    return handleLogin(request, config, deps, passwords, url);
+  }
+
+  if (authenticated) return null;
+
   return loginPage(config, {
     status: 401,
     redirectTo: safeRedirect(`${url.pathname}${url.search}`),
